@@ -7,6 +7,9 @@ class Literal:
         return lambda **env: self.value
 
     def __str__(self):
+        if isinstance(self.value, str):
+            return f"'{self.value}'"
+
         return str(self.value)
 
     repr = __str__
