@@ -1,10 +1,13 @@
 import pytest
-from flexeval.expression_ast import Literal, Name, Call, FUNCTIONS
+
+from flexeval.expression_ast import Literal, Name, Call
+from flexeval.functions import Function as Fn
+from flexeval.function_map import FUNCTIONS
 
 
 @pytest.fixture(scope="module")
 def expression():
-    return Call("*", Call("+", Name("a"), Name("b")), Literal(2))
+    return Call(Fn.MULTIPLY, Call(Fn.ADD, Name("a"), Name("b")), Literal(2))
 
 
 def test_string_representation(expression):

@@ -1,13 +1,3 @@
-from operator import add, sub, mul, truediv, neg
-
-FUNCTIONS = {
-    '+': add,
-    '-': sub,
-    '*': mul,
-    '/': truediv,
-    'neg': neg
-}
-
 
 class Literal:
     def __init__(self, value):
@@ -36,15 +26,15 @@ class Name:
 
 
 class Call:
-    def __init__(self, name, *args):
-        self.name = name
+    def __init__(self, function, *args):
+        self.function = function
         self.args = args
 
     def __str__(self):
-        return f"{self.name}({', '.join(str(a) for a in self.args)})"
+        return f"{self.function.value}({', '.join(str(a) for a in self.args)})"
 
     def compile(self, functions):
-        func = functions[self.name]
+        func = functions[self.function]
         compiled_args = [a.compile(functions) for a in self.args]
         return lambda **env: func(*[a(**env) for a in compiled_args])
 
