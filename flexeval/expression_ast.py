@@ -30,7 +30,7 @@ class Name:
         return lambda **env: env[self.name]
 
     def __str__(self):
-        return self.value
+        return self.name
 
     repr = __str__
 
@@ -41,7 +41,7 @@ class Call:
         self.args = args
 
     def __str__(self):
-        return f"{self.name}({', '.join(self.args)})"
+        return f"{self.name}({', '.join(str(a) for a in self.args)})"
 
     def compile(self, functions):
         func = functions[self.name]
