@@ -17,7 +17,13 @@ class Name:
         self.name = name
 
     def compile(self, _functions):
-        return lambda **env: env[self.name]
+        def value_getter(**env):
+            try:
+                return env[self.name]
+            except KeyError:
+                raise TypeError(f"Expression missing required argument: '{self.name}'")
+
+        return value_getter
 
     def __str__(self):
         return self.name
@@ -31,11 +37,14 @@ class Call:
         self.args = args
 
     def __str__(self):
-        return f"{self.function.value}({', '.join(str(a) for a in self.args)})"
+        return f"{self.function}({', '.join(str(a) for a in self.args)})"
 
     def compile(self, functions):
-        func = functions[self.function]
-        compiled_args = [a.compile(functions) for a in self.args]
-        return lambda **env: func(*[a(**env) for a in compiled_args])
+        try:
+            func = functions[self.function]
+            compiled_args = [a.compile(functions) for a in self.args]
+            return lambda **env: func(*[a(**env) for a in compiled_args])
+        except KeyError:
+            raise NameError(f"Expression using undefined function: '{self.function}'")
 
     repr = __str__
